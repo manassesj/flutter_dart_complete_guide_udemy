@@ -34,46 +34,29 @@ class TransactionList extends StatelessWidget {
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 return Card(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: 10.0),
-                        padding: EdgeInsets.all(10.0),
-                        child: Text(
-                          '\$${transactionList[index].amount.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Theme.of(context).primaryColor,
-                            width: 2.0,
+                  margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+                  elevation: 3.0,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30.0,
+                      child: FittedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            '\$${transactionList[index].amount.toStringAsFixed(2)}',
                           ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            transactionList[index].title,
-                            style: Theme.of(context).textTheme.headline6,
-                          ),
-                          Text(
-                            new DateFormat.yMd()
-                                .add_jm()
-                                .format(transactionList[index].date),
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
+                    title: Text(
+                      transactionList[index].title,
+                      style: Theme.of(context).textTheme.headline6,
+                    ),
+                    subtitle: Text(
+                      DateFormat.yMd()
+                          .add_jm()
+                          .format(transactionList[index].date),
+                    ),
                   ),
                 );
               },
