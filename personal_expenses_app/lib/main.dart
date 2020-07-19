@@ -138,49 +138,50 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     final pagBody = SafeArea(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        if (isLanscape)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('Show chart'),
-              Switch.adaptive(
-                value: _showChart,
-                onChanged: (value) {
-                  setState(() {
-                    _showChart = value;
-                  });
-                },
-              ),
-            ],
-          ),
-        if (!isLanscape)
-          Container(
-            height: (mediaQuery.size.height -
-                    appBar.preferredSize.height -
-                    mediaQuery.padding.top) *
-                0.3,
-            child: ChartWidget(
-              recentTransaction: _recentTransactions,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          if (isLanscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Show chart'),
+                Switch.adaptive(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-          ),
-        if (!isLanscape) txList,
-        if (isLanscape)
-          _showChart
-              ? Container(
-                  height: (mediaQuery.size.height -
-                          appBar.preferredSize.height -
-                          mediaQuery.padding.top) *
-                      0.7,
-                  child: ChartWidget(
-                    recentTransaction: _recentTransactions,
-                  ),
-                )
-              : txList
-      ],
-    ));
+          if (!isLanscape)
+            Container(
+              height: (mediaQuery.size.height -
+                      appBar.preferredSize.height -
+                      mediaQuery.padding.top) *
+                  0.3,
+              child: ChartWidget(
+                recentTransaction: _recentTransactions,
+              ),
+            ),
+          if (!isLanscape) txList,
+          if (isLanscape)
+            _showChart
+                ? Container(
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.7,
+                    child: ChartWidget(
+                      recentTransaction: _recentTransactions,
+                    ),
+                  )
+                : txList
+        ],
+      ),
+    );
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: appBar,
