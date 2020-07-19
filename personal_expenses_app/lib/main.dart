@@ -91,32 +91,77 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  bool _showChart = false;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Personal Expensers',
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.add_circle_outline),
-            onPressed: () => _startAddNewTransaction(context),
-          )
-        ],
+    final isLanscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
+    final appBar = AppBar(
+      title: Text(
+        'Personal Expensers',
       ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add_circle_outline),
+          onPressed: () => _startAddNewTransaction(context),
+        )
+      ],
+    );
+
+    final txList = Container(
+      height: (MediaQuery.of(context).size.height -
+              appBar.preferredSize.height -
+              MediaQuery.of(context).padding.top) *
+          0.7,
+      child: TransactionList(
+        transactionList: _transactionList,
+        removeTransaction: _deleteTransaction,
+      ),
+    );
+    return Scaffold(
+      appBar: appBar,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          ChartWidget(
-            recentTransaction: _recentTransactions,
-          ),
-          Expanded(
-            child: TransactionList(
-              transactionList: _transactionList,
-              removeTransaction: _deleteTransaction,
+          if (isLanscape)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Show chart'),
+                Switch(
+                  value: _showChart,
+                  onChanged: (value) {
+                    setState(() {
+                      _showChart = value;
+                    });
+                  },
+                ),
+              ],
             ),
-          ),
+          if (!isLanscape)
+            Container(
+              height: (MediaQuery.of(context).size.height -
+                      appBar.preferredSize.height -
+                      MediaQuery.of(context).padding.top) *
+                  0.3,
+              child: ChartWidget(
+                recentTransaction: _recentTransactions,
+              ),
+            ),
+          if (!isLanscape) txList,
+          if(isLanscape)
+          _showChart
+              ? Container(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.7,
+                  child: ChartWidget(
+                    recentTransaction: _recentTransactions,
+                  ),
+                )
+              : txList
         ],
       ),
       floatingActionButton: FloatingActionButton(
