@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 
 import './widgets/chart.dart';
@@ -131,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text('Show chart'),
-                Switch(
+                Switch.adaptive(
                   value: _showChart,
                   onChanged: (value) {
                     setState(() {
@@ -166,10 +167,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 : txList
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _startAddNewTransaction(context),
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: Platform.isIOS
+          ? Container()
+          : FloatingActionButton(
+              onPressed: () => _startAddNewTransaction(context),
+              child: Icon(Icons.add),
+            ),
     );
   }
 }
