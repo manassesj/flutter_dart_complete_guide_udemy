@@ -95,6 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+
     final isLanscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
@@ -141,27 +143,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           if (!isLanscape)
             Container(
-              height: (MediaQuery.of(context).size.height -
+              height: (mediaQuery.size.height -
                       appBar.preferredSize.height -
-                      MediaQuery.of(context).padding.top) *
+                      mediaQuery.padding.top) *
                   0.3,
               child: ChartWidget(
                 recentTransaction: _recentTransactions,
               ),
             ),
           if (!isLanscape) txList,
-          if(isLanscape)
-          _showChart
-              ? Container(
-                  height: (MediaQuery.of(context).size.height -
-                          appBar.preferredSize.height -
-                          MediaQuery.of(context).padding.top) *
-                      0.7,
-                  child: ChartWidget(
-                    recentTransaction: _recentTransactions,
-                  ),
-                )
-              : txList
+          if (isLanscape)
+            _showChart
+                ? Container(
+                    height: (mediaQuery.size.height -
+                            appBar.preferredSize.height -
+                            mediaQuery.padding.top) *
+                        0.7,
+                    child: ChartWidget(
+                      recentTransaction: _recentTransactions,
+                    ),
+                  )
+                : txList
         ],
       ),
       floatingActionButton: FloatingActionButton(
