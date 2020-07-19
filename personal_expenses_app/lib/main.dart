@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import './widgets/chart.dart';
@@ -93,24 +94,37 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   bool _showChart = false;
-
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
 
     final isLanscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
-    final appBar = AppBar(
-      title: Text(
-        'Personal Expensers',
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add_circle_outline),
-          onPressed: () => _startAddNewTransaction(context),
-        )
-      ],
-    );
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expensers',
+            ),
+            trailing: Row(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.add_circle_outline),
+                  onPressed: () => _startAddNewTransaction(context),
+                ),
+              ],
+            ),
+          )
+        : AppBar(
+            title: Text(
+              'Personal Expensers',
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add_circle_outline),
+                onPressed: () => _startAddNewTransaction(context),
+              )
+            ],
+          );
 
     final txList = Container(
       height: (MediaQuery.of(context).size.height -
@@ -122,57 +136,64 @@ class _MyHomePageState extends State<MyHomePage> {
         removeTransaction: _deleteTransaction,
       ),
     );
-    return Scaffold(
-      appBar: appBar,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          if (isLanscape)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Show chart'),
-                Switch.adaptive(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-          if (!isLanscape)
-            Container(
-              height: (mediaQuery.size.height -
-                      appBar.preferredSize.height -
-                      mediaQuery.padding.top) *
-                  0.3,
-              child: ChartWidget(
-                recentTransaction: _recentTransactions,
+
+    final pagBody = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        if (isLanscape)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('Show chart'),
+              Switch.adaptive(
+                value: _showChart,
+                onChanged: (value) {
+                  setState(() {
+                    _showChart = value;
+                  });
+                },
               ),
+            ],
+          ),
+        if (!isLanscape)
+          Container(
+            height: (mediaQuery.size.height -
+                    appBar.preferredSize.height -
+                    mediaQuery.padding.top) *
+                0.3,
+            child: ChartWidget(
+              recentTransaction: _recentTransactions,
             ),
-          if (!isLanscape) txList,
-          if (isLanscape)
-            _showChart
-                ? Container(
-                    height: (mediaQuery.size.height -
-                            appBar.preferredSize.height -
-                            mediaQuery.padding.top) *
-                        0.7,
-                    child: ChartWidget(
-                      recentTransaction: _recentTransactions,
-                    ),
-                  )
-                : txList
-        ],
-      ),
-      floatingActionButton: Platform.isIOS
-          ? Container()
-          : FloatingActionButton(
-              onPressed: () => _startAddNewTransaction(context),
-              child: Icon(Icons.add),
-            ),
+          ),
+        if (!isLanscape) txList,
+        if (isLanscape)
+          _showChart
+              ? Container(
+                  height: (mediaQuery.size.height -
+                          appBar.preferredSize.height -
+                          mediaQuery.padding.top) *
+                      0.7,
+                  child: ChartWidget(
+                    recentTransaction: _recentTransactions,
+                  ),
+                )
+              : txList
+      ],
     );
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            navigationBar: appBar,
+            child: pagBody,
+          )
+        : Scaffold(
+            appBar: appBar,
+            body: pagBody,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    onPressed: () => _startAddNewTransaction(context),
+                    child: Icon(Icons.add),
+                  ),
+          );
   }
 }
