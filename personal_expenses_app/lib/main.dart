@@ -137,7 +137,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
 
-    final pagBody = Column(
+    final pagBody = SafeArea(
+        child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         if (isLanscape)
@@ -179,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 )
               : txList
       ],
-    );
+    ));
     return Platform.isIOS
         ? CupertinoPageScaffold(
             navigationBar: appBar,
