@@ -148,30 +148,8 @@ class _MyHomePageState extends State<MyHomePage> {
     final isLanscape =
         MediaQuery.of(context).orientation == Orientation.landscape;
     final PreferredSizeWidget appBar = Platform.isIOS
-        ? CupertinoNavigationBar(
-            middle: Text(
-              'Personal Expensers',
-            ),
-            trailing: Row(
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline),
-                  onPressed: () => _startAddNewTransaction(context),
-                ),
-              ],
-            ),
-          )
-        : AppBar(
-            title: Text(
-              'Personal Expensers',
-            ),
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.add_circle_outline),
-                onPressed: () => _startAddNewTransaction(context),
-              )
-            ],
-          );
+        ? buildCupertinoNavigationBar(context)
+        : buildMaterialAppBar(context);
 
     final txList = Container(
       height: (MediaQuery.of(context).size.height -
@@ -208,5 +186,35 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Icon(Icons.add),
                   ),
           );
+  }
+
+  AppBar buildMaterialAppBar(BuildContext context) {
+    return AppBar(
+      title: Text(
+        'Personal Expensers',
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.add_circle_outline),
+          onPressed: () => _startAddNewTransaction(context),
+        )
+      ],
+    );
+  }
+
+  CupertinoNavigationBar buildCupertinoNavigationBar(BuildContext context) {
+    return CupertinoNavigationBar(
+      middle: Text(
+        'Personal Expensers',
+      ),
+      trailing: Row(
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add_circle_outline),
+            onPressed: () => _startAddNewTransaction(context),
+          ),
+        ],
+      ),
+    );
   }
 }
