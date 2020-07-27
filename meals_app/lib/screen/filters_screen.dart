@@ -12,7 +12,7 @@ class FiltersScreen extends StatelessWidget {
         title: Text('Filters'),
       ),
       drawer: MainDrawer(),
-      body: ,
+      body: Text('filter'),
     );
   }
 }
