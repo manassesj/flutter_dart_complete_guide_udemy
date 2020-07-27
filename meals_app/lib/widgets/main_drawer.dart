@@ -28,7 +28,7 @@ class MainDrawer extends StatelessWidget {
             icon: Icons.restaurant,
             title: 'Meals',
             onTap: () {
-              Navigator.pushNamed(context, '/');
+              Navigator.pushReplacementNamed(context, '/');
             },
           ),
           Divider(
