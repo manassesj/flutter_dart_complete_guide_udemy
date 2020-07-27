@@ -33,7 +33,7 @@ class _CategoryMealsScreenState extends State<CategoryMealsScreen> {
 
   void _removeMeal(String mealId) {
     setState(() {
-      categoryMeals.removeWhere((element) => element.id == mealId)
+      categoryMeals.removeWhere((element) => element.id == mealId);
     });
   }
 
