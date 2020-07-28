@@ -17,7 +17,7 @@ class ProductItem extends StatelessWidget {
           onTap: () => Navigator.of(context).pushReplacementNamed(
             ProductDetailScreen.routeName,
             arguments: {
-              'title': title,
+              'id': id,
             },
           ),
           child: Image.network(
