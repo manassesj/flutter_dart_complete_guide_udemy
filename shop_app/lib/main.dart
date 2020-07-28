@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import './screen/product_overview_screen.dart';
 import './screen/product_detail.dart';
+
+import './providers/products_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,12 +13,15 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Shop App',
-      theme: buildThemeData(),
-      initialRoute: ProductsOverviewScreen.routeName,
-      routes: routes(),
+    return ChangeNotifierProvider(
+      create: (_) => Products(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Shop App',
+        theme: buildThemeData(),
+        initialRoute: ProductsOverviewScreen.routeName,
+        routes: routes(),
+      ),
     );
   }
 
