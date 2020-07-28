@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/product.dart';
 import 'package:shop_app/screen/product_detail.dart';
 
 class ProductItem extends StatelessWidget {
-  final String id;
-  final String title;
-  final String imageUrl;
+  // final String id;
+  // final String title;
+  // final String imageUrl;
 
-  const ProductItem({this.id, this.title, this.imageUrl});
+  // const ProductItem({this.id, this.title, this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(20.0),
       child: GridTile(
@@ -17,11 +21,11 @@ class ProductItem extends StatelessWidget {
           onTap: () => Navigator.of(context).pushReplacementNamed(
             ProductDetailScreen.routeName,
             arguments: {
-              'id': id,
+              'id': product.id,
             },
           ),
           child: Image.network(
-            imageUrl,
+            product.imageUrl,
             fit: BoxFit.cover,
           ),
         ),
@@ -29,13 +33,13 @@ class ProductItem extends StatelessWidget {
           backgroundColor: Colors.black87.withOpacity(0.6),
           leading: IconButton(
             icon: Icon(
-              Icons.favorite,
+              product.isFavorite ? Icons.favorite : Icons.favorite_border,
               color: Theme.of(context).accentColor,
             ),
-            onPressed: () {},
+            onPressed: product.toggleFavoriteStatus,
           ),
           title: Text(
-            title,
+            product.title,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           trailing: IconButton(
