@@ -10,8 +10,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Shop App',
-      home: ProductsOverviewScreen(),
+      theme: ThemeData(
+        primarySwatch: Colors.purple,
+        accentColor: Colors.deepOrange,
+        fontFamily: 'Lato',
+      ),
+      initialRoute: ProductsOverviewScreen.routeName,
+      routes: {
+        ProductsOverviewScreen.routeName: (_) => ProductsOverviewScreen()
+      },
     );
   }
 }
