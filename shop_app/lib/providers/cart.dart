@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 class CartItem {
@@ -15,9 +16,17 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> _items;
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get getItems => {..._items};
+
+  int get getItemCount {
+    var countItems = 0;
+    _items.forEach((key, value) {
+      countItems += value.quantity;
+    });
+    return countItems;
+  }
 
   void addItem({String productId, String title, double price}) {
     if (_items.containsKey(productId)) {
@@ -41,5 +50,6 @@ class Cart with ChangeNotifier {
         ),
       );
     }
+    notifyListeners();
   }
 }
