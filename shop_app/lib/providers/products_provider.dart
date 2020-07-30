@@ -61,7 +61,7 @@ class Products with ChangeNotifier {
   // void setShowAll() {
   //   showFavoritesOnly = false;
   //   notifyListeners();
-  // }
+  // }1
 
   Product findById(String id) {
     return _items.firstWhere((element) => element.id == id);
