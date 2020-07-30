@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/screen/order_screen.dart';
 import 'package:shop_app/screen/product_overview_screen.dart';
+import 'package:shop_app/screen/user_produts_screen.dart';
 
 class AddDrawer extends StatelessWidget {
   @override
@@ -13,21 +14,38 @@ class AddDrawer extends StatelessWidget {
             automaticallyImplyLeading: false,
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.shop),
-            title: Text('Shop'),
-            onTap: () => Navigator.of(context)
-                .pushReplacementNamed(ProductsOverviewScreen.routeName),
+          buildListTile(
+            context: context,
+            icon: Icons.shop,
+            title: 'Shop',
+            route: ProductsOverviewScreen.routeName,
           ),
           Divider(),
-          ListTile(
-            leading: Icon(Icons.payment),
-            title: Text('Orders'),
-            onTap: () => Navigator.of(context)
-                .pushReplacementNamed(OrderScrren.routeName),
+          buildListTile(
+            context: context,
+            icon: Icons.payment,
+            title: 'Orders',
+            route: OrderScrren.routeName,
           ),
+          Divider(),
+          buildListTile(
+            context: context,
+            icon: Icons.add,
+            title: 'Manage Products',
+            route: UserProductScreen.routeName,
+          ),
+          Divider(),
         ],
       ),
+    );
+  }
+
+  ListTile buildListTile(
+      {BuildContext context, IconData icon, String title, String route}) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: () => Navigator.of(context).pushReplacementNamed(route),
     );
   }
 }
