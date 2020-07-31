@@ -11,6 +11,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
 
+  final _imageUrlController = TextEditingController();
+
   @override
   void dispose() {
     super.dispose();
@@ -52,6 +54,39 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   focusNode: _descriptionFocusNode,
                   textBoardType: TextInputType.multiline,
                 ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Card(
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 100.0,
+                        height: 100.0,
+                        margin: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.grey),
+                        ),
+                        child: _imageUrlController.text.isEmpty
+                            ? Text('Enter a Url')
+                            : FittedBox(
+                                child: Image.network(
+                                  _imageUrlController.text,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                      ),
+                    ),
+                    Expanded(
+                      child: buildInputForm(
+                        context: context,
+                        label: 'Image Url',
+                        textBoardType: TextInputType.url,
+                        textInputAction: TextInputAction.done,
+                        controller: _imageUrlController,
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -64,6 +99,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
     BuildContext context,
     String label,
     TextInputType textBoardType = TextInputType.text,
+    TextInputAction textInputAction = TextInputAction.next,
+    TextEditingController controller,
     FocusNode focusNode,
     Function onFieldSubmitted,
     int maxLine = 1,
@@ -79,6 +116,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           keyboardType: textBoardType,
           focusNode: focusNode,
           onFieldSubmitted: onFieldSubmitted,
+          controller: controller,
         ),
       ),
     );
