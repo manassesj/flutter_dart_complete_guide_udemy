@@ -9,6 +9,14 @@ class EditProductScreen extends StatefulWidget {
 
 class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
+  final _descriptionFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _priceFocusNode.dispose();
+    _descriptionFocusNode.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +37,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       FocusScope.of(context).requestFocus(_priceFocusNode);
                     }),
                 buildInputForm(
+                    context: context,
+                    label: 'Price',
+                    textBoardType: TextInputType.number,
+                    focusNode: _priceFocusNode,
+                    onFieldSubmitted: (String value) {
+                      FocusScope.of(context)
+                          .requestFocus(_descriptionFocusNode);
+                    }),
+                buildInputForm(
                   context: context,
-                  label: 'Price',
-                  textBoardType: TextInputType.number,
-                  focusNode: _priceFocusNode,
+                  label: 'Desciption',
+                  maxLine: 3,
+                  focusNode: _descriptionFocusNode,
+                  textBoardType: TextInputType.multiline,
                 ),
               ],
             ),
@@ -48,6 +66,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     TextInputType textBoardType = TextInputType.text,
     FocusNode focusNode,
     Function onFieldSubmitted,
+    int maxLine = 1,
   }) {
     return Card(
       child: Padding(
@@ -56,6 +75,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           decoration: InputDecoration(
               labelText: label, hoverColor: Theme.of(context).primaryColor),
           textInputAction: TextInputAction.next,
+          maxLines: maxLine,
           keyboardType: textBoardType,
           focusNode: focusNode,
           onFieldSubmitted: onFieldSubmitted,
