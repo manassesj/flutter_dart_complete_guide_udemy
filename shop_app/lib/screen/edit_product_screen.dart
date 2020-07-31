@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/providers/product.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/Edit-product-screen';
@@ -10,8 +11,15 @@ class EditProductScreen extends StatefulWidget {
 class _EditProductScreenState extends State<EditProductScreen> {
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
-
   final _imageUrlController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  var _editProduct = Product(
+    id: null,
+    title: '',
+    description: '',
+    price: 0,
+    imageUrl: '',
+  );
 
   @override
   void dispose() {
@@ -20,24 +28,44 @@ class _EditProductScreenState extends State<EditProductScreen> {
     _descriptionFocusNode.dispose();
   }
 
+  void _saveForm() {
+    _formKey.currentState.save();
+    print(_editProduct.title);
+    print(_editProduct.imageUrl);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Edit Product'),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.save), onPressed: _saveForm)
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Form(
+          key: _formKey,
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
                 buildInputForm(
-                    context: context,
-                    label: 'Title',
-                    onFieldSubmitted: (String value) {
-                      FocusScope.of(context).requestFocus(_priceFocusNode);
-                    }),
+                  context: context,
+                  label: 'Title',
+                  onFieldSubmitted: (String value) {
+                    FocusScope.of(context).requestFocus(_priceFocusNode);
+                  },
+                  onSaved: (value) {
+                    _editProduct = Product(
+                      title: value,
+                      price: _editProduct.price,
+                      imageUrl: _editProduct.imageUrl,
+                      description: _editProduct.description,
+                      id: null,
+                    );
+                  },
+                ),
                 buildInputForm(
                     context: context,
                     label: 'Price',
@@ -46,14 +74,31 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     onFieldSubmitted: (String value) {
                       FocusScope.of(context)
                           .requestFocus(_descriptionFocusNode);
+                    },
+                    onSaved: (value) {
+                      _editProduct = Product(
+                        title: _editProduct.title,
+                        price: double.parse(value),
+                        imageUrl: _editProduct.imageUrl,
+                        description: _editProduct.description,
+                        id: null,
+                      );
                     }),
                 buildInputForm(
-                  context: context,
-                  label: 'Desciption',
-                  maxLine: 3,
-                  focusNode: _descriptionFocusNode,
-                  textBoardType: TextInputType.multiline,
-                ),
+                    context: context,
+                    label: 'Desciption',
+                    maxLine: 3,
+                    focusNode: _descriptionFocusNode,
+                    textBoardType: TextInputType.multiline,
+                    onSaved: (value) {
+                      _editProduct = Product(
+                        title: _editProduct.title,
+                        price: _editProduct.price,
+                        description: value,
+                        imageUrl: _editProduct.imageUrl,
+                        id: null,
+                      );
+                    }),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
@@ -78,12 +123,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     ),
                     Expanded(
                       child: buildInputForm(
-                        context: context,
-                        label: 'Image Url',
-                        textBoardType: TextInputType.url,
-                        textInputAction: TextInputAction.done,
-                        controller: _imageUrlController,
-                      ),
+                          context: context,
+                          label: 'Image Url',
+                          textBoardType: TextInputType.url,
+                          textInputAction: TextInputAction.done,
+                          controller: _imageUrlController,
+                          onFieldSubmitted: (_) => _saveForm(),
+                          onSaved: (value) {
+                            _editProduct = Product(
+                              title: _editProduct.title,
+                              price: _editProduct.price,
+                              imageUrl: value,
+                              description: _editProduct.description,
+                              id: null,
+                            );
+                          }),
                     ),
                   ],
                 )
@@ -101,6 +155,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     TextInputType textBoardType = TextInputType.text,
     TextInputAction textInputAction = TextInputAction.next,
     TextEditingController controller,
+    Function onSaved,
     FocusNode focusNode,
     Function onFieldSubmitted,
     int maxLine = 1,
@@ -111,12 +166,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
         child: TextFormField(
           decoration: InputDecoration(
               labelText: label, hoverColor: Theme.of(context).primaryColor),
-          textInputAction: TextInputAction.next,
+          textInputAction: textInputAction,
           maxLines: maxLine,
           keyboardType: textBoardType,
           focusNode: focusNode,
           onFieldSubmitted: onFieldSubmitted,
           controller: controller,
+          onSaved: onSaved,
         ),
       ),
     );
