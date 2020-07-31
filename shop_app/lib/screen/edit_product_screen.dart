@@ -29,6 +29,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   void _saveForm() {
+    final isValid = _formKey.currentState.validate();
+    if (isValid) {
+      return;
+    }
     _formKey.currentState.save();
     print(_editProduct.title);
     print(_editProduct.imageUrl);
@@ -51,54 +55,64 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: Column(
               children: <Widget>[
                 buildInputForm(
+                    context: context,
+                    label: 'Title',
+                    onFieldSubmitted: (String value) {
+                      FocusScope.of(context).requestFocus(_priceFocusNode);
+                    },
+                    onSaved: (value) {
+                      _editProduct = Product(
+                        title: value,
+                        price: _editProduct.price,
+                        imageUrl: _editProduct.imageUrl,
+                        description: _editProduct.description,
+                        id: null,
+                      );
+                    },
+                    validator: (value) {
+                      if (value.toString().isEmpty) {
+                        return 'Please Provide a value';
+                      }
+                    }),
+                buildInputForm(
                   context: context,
-                  label: 'Title',
+                  label: 'Price',
+                  textBoardType: TextInputType.number,
+                  focusNode: _priceFocusNode,
                   onFieldSubmitted: (String value) {
-                    FocusScope.of(context).requestFocus(_priceFocusNode);
+                    FocusScope.of(context).requestFocus(_descriptionFocusNode);
                   },
                   onSaved: (value) {
                     _editProduct = Product(
-                      title: value,
-                      price: _editProduct.price,
+                      title: _editProduct.title,
+                      price: double.parse(value),
                       imageUrl: _editProduct.imageUrl,
                       description: _editProduct.description,
                       id: null,
                     );
                   },
+                  validator: (value) {
+                    if (value.toString().isEmpty) {
+                      return 'Please Provide a value';
+                    }
+                  },
                 ),
                 buildInputForm(
-                    context: context,
-                    label: 'Price',
-                    textBoardType: TextInputType.number,
-                    focusNode: _priceFocusNode,
-                    onFieldSubmitted: (String value) {
-                      FocusScope.of(context)
-                          .requestFocus(_descriptionFocusNode);
-                    },
-                    onSaved: (value) {
-                      _editProduct = Product(
-                        title: _editProduct.title,
-                        price: double.parse(value),
-                        imageUrl: _editProduct.imageUrl,
-                        description: _editProduct.description,
-                        id: null,
-                      );
-                    }),
-                buildInputForm(
-                    context: context,
-                    label: 'Desciption',
-                    maxLine: 3,
-                    focusNode: _descriptionFocusNode,
-                    textBoardType: TextInputType.multiline,
-                    onSaved: (value) {
-                      _editProduct = Product(
-                        title: _editProduct.title,
-                        price: _editProduct.price,
-                        description: value,
-                        imageUrl: _editProduct.imageUrl,
-                        id: null,
-                      );
-                    }),
+                  context: context,
+                  label: 'Desciption',
+                  maxLine: 3,
+                  focusNode: _descriptionFocusNode,
+                  textBoardType: TextInputType.multiline,
+                  onSaved: (value) {
+                    _editProduct = Product(
+                      title: _editProduct.title,
+                      price: _editProduct.price,
+                      description: value,
+                      imageUrl: _editProduct.imageUrl,
+                      id: null,
+                    );
+                  },
+                ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
@@ -123,21 +137,27 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     ),
                     Expanded(
                       child: buildInputForm(
-                          context: context,
-                          label: 'Image Url',
-                          textBoardType: TextInputType.url,
-                          textInputAction: TextInputAction.done,
-                          controller: _imageUrlController,
-                          onFieldSubmitted: (_) => _saveForm(),
-                          onSaved: (value) {
-                            _editProduct = Product(
-                              title: _editProduct.title,
-                              price: _editProduct.price,
-                              imageUrl: value,
-                              description: _editProduct.description,
-                              id: null,
-                            );
-                          }),
+                        context: context,
+                        label: 'Image Url',
+                        textBoardType: TextInputType.url,
+                        textInputAction: TextInputAction.done,
+                        controller: _imageUrlController,
+                        onFieldSubmitted: (_) => _saveForm(),
+                        onSaved: (value) {
+                          _editProduct = Product(
+                            title: _editProduct.title,
+                            price: _editProduct.price,
+                            imageUrl: value,
+                            description: _editProduct.description,
+                            id: null,
+                          );
+                        },
+                        validator: (value) {
+                          if (value.toString().isEmpty) {
+                            return 'Please Provide a value';
+                          }
+                        },
+                      ),
                     ),
                   ],
                 )
@@ -156,6 +176,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     TextInputAction textInputAction = TextInputAction.next,
     TextEditingController controller,
     Function onSaved,
+    Function validator,
     FocusNode focusNode,
     Function onFieldSubmitted,
     int maxLine = 1,
@@ -173,6 +194,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           onFieldSubmitted: onFieldSubmitted,
           controller: controller,
           onSaved: onSaved,
+          validator: validator,
         ),
       ),
     );
