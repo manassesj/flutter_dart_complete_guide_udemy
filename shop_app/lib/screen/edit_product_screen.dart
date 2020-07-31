@@ -93,8 +93,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                   validator: (value) {
                     if (value.toString().isEmpty) {
-                      return 'Please Provide a value';
+                      return 'Please enter a Price';
                     }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number.';
+                    }
+                    if (double.parse(value) <= 0) {
+                      return 'Please a number greater than zero';
+                    }
+                    return null;
                   },
                 ),
                 buildInputForm(
@@ -111,6 +118,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       imageUrl: _editProduct.imageUrl,
                       id: null,
                     );
+                  },
+                  validator: (value) {
+                    if (value.toString().isEmpty) {
+                      return 'Please enter a description';
+                    }
+                    if (value.toString().length < 10) {
+                      return 'Should be 10 characters long';
+                    }
+                    return null;
                   },
                 ),
                 Row(
@@ -154,8 +170,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         },
                         validator: (value) {
                           if (value.toString().isEmpty) {
-                            return 'Please Provide a value';
+                            return 'Please enter a imageUrl';
                           }
+                          if (!value.toString().startsWith('http')&&|
+                              !value.toString().startsWith('https')) {
+                            return 'Please enter a valid imageUrl';
+                          }
+                          return null;
                         },
                       ),
                     ),
