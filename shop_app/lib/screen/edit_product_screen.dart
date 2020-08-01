@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product.dart';
+import 'package:shop_app/providers/products_provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/Edit-product-screen';
@@ -34,8 +36,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formKey.currentState.save();
-    print(_editProduct.title);
-    print(_editProduct.imageUrl);
+    Provider.of<Products>(context, listen: false).addProduct(_editProduct);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -172,7 +174,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           if (value.toString().isEmpty) {
                             return 'Please enter a imageUrl';
                           }
-                          if (!value.toString().startsWith('http')&&|
+                          if (!value.toString().startsWith('http') &&
                               !value.toString().startsWith('https')) {
                             return 'Please enter a valid imageUrl';
                           }
