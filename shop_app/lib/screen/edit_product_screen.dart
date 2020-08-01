@@ -23,6 +23,38 @@ class _EditProductScreenState extends State<EditProductScreen> {
     imageUrl: '',
   );
 
+  var _initValue = {
+    'title': '',
+    'description': '',
+    'price': '',
+    'imageUrl': '',
+  };
+
+  var _isInit = true;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      print(productId);
+      if (productId != null) {
+        _editProduct =
+            Provider.of<Products>(context, listen: false).findById(productId);
+
+        _initValue = {
+          'title': _editProduct.title,
+          'description': _editProduct.description,
+          'price': _editProduct.price.toString(),
+          'imageUrl': ''
+        };
+        _imageUrlController.text = _editProduct.imageUrl;
+      }
+    }
+    _isInit = false;
+
+    super.didChangeDependencies();
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -32,11 +64,16 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _saveForm() {
     final isValid = _formKey.currentState.validate();
-    if (isValid) {
+    if (!isValid) {
       return;
     }
     _formKey.currentState.save();
-    Provider.of<Products>(context, listen: false).addProduct(_editProduct);
+    if (_editProduct.id == null) {
+      Provider.of<Products>(context, listen: false).addProduct(_editProduct);
+    } else {
+      Provider.of<Products>(context, listen: false)
+          .editProduct(_editProduct.id, _editProduct);
+    }
     Navigator.of(context).pop();
   }
 
@@ -59,16 +96,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 buildInputForm(
                     context: context,
                     label: 'Title',
+                    initialValue: _initValue['title'],
                     onFieldSubmitted: (String value) {
                       FocusScope.of(context).requestFocus(_priceFocusNode);
                     },
                     onSaved: (value) {
                       _editProduct = Product(
+                        id: _editProduct.id,
+                        isFavorite: _editProduct.isFavorite,
                         title: value,
                         price: _editProduct.price,
                         imageUrl: _editProduct.imageUrl,
                         description: _editProduct.description,
-                        id: null,
                       );
                     },
                     validator: (value) {
@@ -79,6 +118,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 buildInputForm(
                   context: context,
                   label: 'Price',
+                  initialValue: _initValue['price'],
                   textBoardType: TextInputType.number,
                   focusNode: _priceFocusNode,
                   onFieldSubmitted: (String value) {
@@ -86,11 +126,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                   onSaved: (value) {
                     _editProduct = Product(
+                      id: _editProduct.id,
+                      isFavorite: _editProduct.isFavorite,
                       title: _editProduct.title,
                       price: double.parse(value),
                       imageUrl: _editProduct.imageUrl,
                       description: _editProduct.description,
-                      id: null,
                     );
                   },
                   validator: (value) {
@@ -109,6 +150,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 buildInputForm(
                   context: context,
                   label: 'Desciption',
+                  initialValue: _initValue['description'],
                   maxLine: 3,
                   focusNode: _descriptionFocusNode,
                   textBoardType: TextInputType.multiline,
@@ -118,7 +160,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       price: _editProduct.price,
                       description: value,
                       imageUrl: _editProduct.imageUrl,
-                      id: null,
+                      id: _editProduct.id,
+                      isFavorite: _editProduct.isFavorite,
                     );
                   },
                   validator: (value) {
@@ -167,7 +210,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             price: _editProduct.price,
                             imageUrl: value,
                             description: _editProduct.description,
-                            id: null,
+                            id: _editProduct.id,
+                            isFavorite: _editProduct.isFavorite,
                           );
                         },
                         validator: (value) {
@@ -195,6 +239,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Card buildInputForm({
     BuildContext context,
     String label,
+    String initialValue,
     TextInputType textBoardType = TextInputType.text,
     TextInputAction textInputAction = TextInputAction.next,
     TextEditingController controller,
@@ -218,6 +263,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           controller: controller,
           onSaved: onSaved,
           validator: validator,
+          initialValue: initialValue,
         ),
       ),
     );
