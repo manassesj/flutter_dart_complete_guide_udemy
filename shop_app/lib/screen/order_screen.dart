@@ -17,12 +17,13 @@ class OrderScrren extends StatelessWidget {
         title: Text('Your Orders'),
         leading: GestureDetector(
           child: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () => Navigator.of(context)
-                  .popAndPushNamed(ProductsOverviewScreen.routeName)),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () => Navigator.of(context)
+                .popAndPushNamed(ProductsOverviewScreen.routeName),
+          ),
         ),
       ),
       body: ListView.builder(
