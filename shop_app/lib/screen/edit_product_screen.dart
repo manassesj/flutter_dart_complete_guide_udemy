@@ -69,31 +69,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _formKey.currentState.save();
-    setState(
-      () {
-        _isLoading = true;
-      },
-    );
+    setState(() {
+      _isLoading = true;
+    });
     if (_editProduct.id == null) {
       Provider.of<Products>(context, listen: false)
           .addProduct(_editProduct)
-          .then((_) => Navigator.of(context).pop());
-      setState(
-        () {
+          .catchError((err) {
+        return showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('An error ocurred!'),
+            content: Text(
+              err.toString(),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('Ok'),
+              )
+            ],
+          ),
+        );
+      }).then((_) {
+        setState(() {
           _isLoading = false;
-        },
-      );
+        });
+        Navigator.of(context).pop();
+      });
     } else {
       Provider.of<Products>(context, listen: false)
           .editProduct(_editProduct.id, _editProduct);
+      setState(() {
+        _isLoading = false;
+      });
       Navigator.of(context).pop();
-      setState(
-        () {
-          _isLoading = false;
-        },
-      );
     }
-    Navigator.of(context).pop();
   }
 
   @override
@@ -253,7 +264,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             ),
                           ),
                         ],
-                      )
+                      ),
                     ],
                   ),
                 ),

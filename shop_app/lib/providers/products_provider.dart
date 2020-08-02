@@ -100,7 +100,9 @@ class Products with ChangeNotifier {
 
         notifyListeners();
       },
-    );
+    ).catchError((err) {
+      throw err;
+    });
   }
 
   void editProduct(String productId, Product product) {
