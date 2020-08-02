@@ -99,6 +99,16 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchAndSetProducts() async {
+    const url = 'https://shopapp-7d462.firebaseio.com/products.json';
+    try {
+      final response = await http.get(url);
+      
+    } catch (err) {
+      throw (err);
+    }
+  }
+
   void editProduct(String productId, Product product) {
     final prodIndex = _items.indexWhere((element) => element.id == productId);
 
