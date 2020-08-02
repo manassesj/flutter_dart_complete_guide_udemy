@@ -70,39 +70,33 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     const url = 'https://shopapp-7d462.firebaseio.com/products.json';
-
-    return http
-        .post(
-      url,
-      body: json.encode(
-        {
-          'title': product.title,
-          'description': product.description,
-          'imageUrl': product.imageUrl,
-          'price': product.price,
-          'isFavorite': product.isFavorite,
-        },
-      ),
-    )
-        .then(
-      (response) {
-        final newProduct = Product(
-          id: json.decode(response.body)['name'],
-          price: product.price,
-          description: product.description,
-          imageUrl: product.imageUrl,
-          title: product.title,
-        );
-
-        _items.add(newProduct);
-
-        notifyListeners();
-      },
-    ).catchError((err) {
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode(
+          {
+            'title': product.title,
+            'description': product.description,
+            'imageUrl': product.imageUrl,
+            'price': product.price,
+            'isFavorite': product.isFavorite,
+          },
+        ),
+      );
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        price: product.price,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        title: product.title,
+      );
+      _items.add(newProduct);
+    } catch (err) {
       throw err;
-    });
+    }
+    notifyListeners();
   }
 
   void editProduct(String productId, Product product) {
