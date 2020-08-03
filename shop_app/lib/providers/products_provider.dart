@@ -152,7 +152,24 @@ class Products with ChangeNotifier {
   }
 
   void deleteProduct(String productId) {
-    _items.removeWhere((element) => element.id == productId);
+    final productIndex =
+        _items.indexWhere((element) => element.id == productId);
+    final url = 'https://shopapp-7d462.firebaseio.com/products/$productId.json';
+
+    var existingProduct = _items[productIndex];
+    _items.removeAt(productIndex);
+
+    try {
+      final response = http.delete(url);
+
+    if(response)
+
+      existingProduct = null;
+
+
+    } catch (err) {
+      _items.insert(productIndex, existingProduct);
+    }
 
     notifyListeners();
   }
