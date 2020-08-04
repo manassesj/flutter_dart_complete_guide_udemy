@@ -13,37 +13,37 @@ class OrderScrren extends StatefulWidget {
 }
 
 class _OrderScrrenState extends State<OrderScrren> {
-  var _init = true;
-  var _isLoading = false;
+  // var _init = true;
+  // var _isLoading = false;
+  // final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
-  void didChangeDependencies() {
-    if (_init) {
-      setState(() {
-        _isLoading = true;
-      });
-      Provider.of<Orders>(context, listen: false).fetchAndSetOrders().then(
-            (_) => {
-              setState(
-                () {
-                  _isLoading = false;
-                },
-              )
-            },
-          );
-    }
-    setState(() {
-      _init = false;
-    });
+  // @override
+  // void didChangeDependencies() {
+  //   if (_init) {
+  //     setState(() {
+  //       _isLoading = true;
+  //     });
+  //     Provider.of<Orders>(context, listen: false).fetchAndSetOrders().then(
+  //           (_) => {
+  //             setState(() {
+  //               _isLoading = false;
+  //             })
+  //           },
+  //         );
+  //   }
+  //   setState(() {
+  //     _init = false;
+  //   });
 
-    super.didChangeDependencies();
-  }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final orders = Provider.of<Orders>(context).getOrders;
+    // final orders = Provider.of<Orders>(context).getOrders;
 
     return Scaffold(
+      // key: scaffoldKey,
       appBar: AppBar(
         title: Text('Your Orders'),
         leading: GestureDetector(
@@ -57,12 +57,35 @@ class _OrderScrrenState extends State<OrderScrren> {
           ),
         ),
       ),
-      body: _isLoading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: orders.length,
-              itemBuilder: (_, index) => OrderItemWidget(order: orders[index]),
-            ),
+      body: FutureBuilder(
+        future: Provider.of<Orders>(context, listen: false).fetchAndSetOrders(),
+        builder: (_, datasnackShot) {
+          if (datasnackShot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (datasnackShot.error != null) {
+              return Center(
+                child: Text(
+                  'A erro Ocurrred',
+                  style: TextStyle(
+                    color: Theme.of(context).errorColor,
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            } else {
+              return Consumer<Orders>(
+                builder: (_, orders, child) => ListView.builder(
+                  itemCount: orders.getOrders.length,
+                  itemBuilder: (_, index) =>
+                      OrderItemWidget(order: orders.getOrders[index]),
+                ),
+              );
+            }
+          }
+        },
+      ),
     );
   }
 }
