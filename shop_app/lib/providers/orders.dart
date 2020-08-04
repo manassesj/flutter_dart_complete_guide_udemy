@@ -24,6 +24,45 @@ class Orders with ChangeNotifier {
 
   List<OrderItem> get getOrders => [..._orders];
 
+  Future<void> fetchAndSetOrders() async {
+    const url = 'https://shopapp-7d462.firebaseio.com/orders.json';
+
+    final List<OrderItem> fetchedOrders = [];
+    try {
+      final response = await http.get(url);
+
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+      if (responseData == null) {
+        return;
+      }
+      responseData.forEach(
+        (orderId, orderData) {
+          fetchedOrders.add(
+            OrderItem(
+              id: orderId,
+              amount: orderData['amount'],
+              dateTime: DateTime.parse(orderData['dateTime']),
+              products: (orderData['products'] as List<dynamic>)
+                  .map(
+                    (item) => CartItem(
+                      id: item['id'],
+                      title: item['title'],
+                      quantity: item['quantity'],
+                      price: item['price'],
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+        },
+      );
+      _orders = fetchedOrders;
+      notifyListeners();
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     const url = 'https://shopapp-7d462.firebaseio.com/orders.json';
 
@@ -36,18 +75,16 @@ class Orders with ChangeNotifier {
           {
             'amount': total,
             'dateTime': timeStamp.toIso8601String(),
-            'products': [
-              cartProducts
-                  .map(
-                    (product) => {
-                      'id': product.id,
-                      'title': product.title,
-                      'quantity': product.quantity,
-                      'price': product.price,
-                    },
-                  )
-                  .toList()
-            ],
+            'products': cartProducts
+                .map(
+                  (product) => {
+                    'id': product.id,
+                    'title': product.title,
+                    'quantity': product.quantity,
+                    'price': product.price,
+                  },
+                )
+                .toList(),
           },
         ),
       );

@@ -5,8 +5,39 @@ import 'package:shop_app/widgets/order_item.dart';
 
 import '../providers/orders.dart';
 
-class OrderScrren extends StatelessWidget {
+class OrderScrren extends StatefulWidget {
   static const routeName = '/Order-screen';
+
+  @override
+  _OrderScrrenState createState() => _OrderScrrenState();
+}
+
+class _OrderScrrenState extends State<OrderScrren> {
+  var _init = true;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_init) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Orders>(context, listen: false).fetchAndSetOrders().then(
+            (_) => {
+              setState(
+                () {
+                  _isLoading = false;
+                },
+              )
+            },
+          );
+    }
+    setState(() {
+      _init = false;
+    });
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +57,12 @@ class OrderScrren extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView.builder(
-        itemCount: orders.length,
-        itemBuilder: (_, index) => OrderItemWidget(order: orders[index]),
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (_, index) => OrderItemWidget(order: orders[index]),
+            ),
     );
   }
 }
