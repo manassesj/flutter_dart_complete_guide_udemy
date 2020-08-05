@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/screen/edit_product_screen.dart';
 
+import './screen/edit_product_screen.dart';
+import './screen/auth_screen.dart';
 import './screen/order_screen.dart';
 import './screen/cart_screen.dart';
 import './screen/product_overview_screen.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Shop App',
         theme: buildThemeData(),
-        initialRoute: ProductsOverviewScreen.routeName,
+        initialRoute: AuthScreen.routeName,
         routes: routes(),
       ),
     );
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
       OrderScrren.routeName: (_) => OrderScrren(),
       UserProductScreen.routeName: (_) => UserProductScreen(),
       EditProductScreen.routeName: (_) => EditProductScreen(),
+      AuthScreen.routeName: (_) => AuthScreen(),
     };
   }
 
