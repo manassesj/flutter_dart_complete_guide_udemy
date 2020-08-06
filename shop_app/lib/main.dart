@@ -39,16 +39,18 @@ class MyApp extends StatelessWidget {
   List<SingleChildWidget> providers() {
     return [
       ChangeNotifierProvider(
-        create: (_) => Products(),
+        create: (_) => Auth(),
+      ),
+      ChangeNotifierProxyProvider<Auth, Products>(
+        update: (_, auth, previusProducts) => Products(auth.token,
+            previusProducts == null ? [] : previusProducts.getItems),
+      ),
+      ChangeNotifierProxyProvider<Auth, Orders>(
+        update: (_, auth, previusOrders) => Orders(
+            auth.token, previusOrders == null ? [] : previusOrders.getOrders),
       ),
       ChangeNotifierProvider(
         create: (_) => Cart(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => Orders(),
-      ),
-      ChangeNotifierProvider(
-        create: (_) => Auth(),
       ),
     ];
   }

@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shop_app/model/http_exception.dart';
+
+import '../model/http_exception.dart';
 
 import './product.dart';
 
@@ -42,37 +43,24 @@ class Products with ChangeNotifier {
     // ),
   ];
 
-  // var showFavoritesOnly = false;
+  final String authToken;
+
+  Products(this.authToken, this._items);
 
   List<Product> get favoriteItems =>
       _items.where((element) => element.isFavorite).toList();
 
   List<Product> get getItems {
-    // switch (showFavoritesOnly) {
-    //   case true:
-    //     return _items.where((element) => element.isFavorite).toList();
-    //     break;
-    //   default:
     return [..._items];
-    // }
   }
-
-  // void setShowFavorites() {
-  //   showFavoritesOnly = true;
-  //   notifyListeners();
-  // }
-
-  // void setShowAll() {
-  //   showFavoritesOnly = false;
-  //   notifyListeners();
-  // }1
 
   Product findById(String id) {
     return _items.firstWhere((element) => element.id == id);
   }
 
   Future<void> addProduct(Product product) async {
-    const url = 'https://shopapp-7d462.firebaseio.com/products.json';
+    final url =
+        'https://shopapp-7d462.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(
         url,
@@ -101,7 +89,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://shopapp-7d462.firebaseio.com/products.json?auth=';
+    final url =
+        'https://shopapp-7d462.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(url);
       final responseData = json.decode(response.body) as Map<String, dynamic>;
@@ -133,7 +122,8 @@ class Products with ChangeNotifier {
 
   Future<void> editProduct(String productId, Product product) async {
     final prodIndex = _items.indexWhere((element) => element.id == productId);
-    final url = 'https://shopapp-7d462.firebaseio.com/products/$productId.json';
+    final url =
+        'https://shopapp-7d462.firebaseio.com/products/$productId.json?auth=$authToken';
     try {
       await http.patch(
         url,
@@ -158,7 +148,8 @@ class Products with ChangeNotifier {
   Future<void> deleteProduct(String productId) async {
     final productIndex =
         _items.indexWhere((element) => element.id == productId);
-    final url = 'https://shopapp-7d462.firebaseio.com/products/$productId.json';
+    final url =
+        'https://shopapp-7d462.firebaseio.com/products/$productId.json?auth=$authToken';
 
     var existingProduct = _items[productIndex];
     _items.removeAt(productIndex);
