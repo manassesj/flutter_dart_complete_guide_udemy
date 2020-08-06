@@ -101,7 +101,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://shopapp-7d462.firebaseio.com/products.json';
+    const url = 'https://shopapp-7d462.firebaseio.com/products.json?auth=';
     try {
       final response = await http.get(url);
       final responseData = json.decode(response.body) as Map<String, dynamic>;

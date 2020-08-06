@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/model/http_exception.dart';
+import 'package:shop_app/screen/product_overview_screen.dart';
 
 import '../providers/auth.dart';
 
@@ -104,6 +106,22 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Ok'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
       // Invalid!
@@ -113,14 +131,41 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      await Provider.of<Auth>(context, listen: false).signUp(
-        email: _authData['email'],
-        password: _authData['password'],
-      );
+    try {
+      if (_authMode == AuthMode.Login) {
+        await Provider.of<Auth>(context, listen: false).signIn(
+          email: _authData['email'],
+          password: _authData['password'],
+        );
+      } else {
+        await Provider.of<Auth>(context, listen: false).signUp(
+          email: _authData['email'],
+          password: _authData['password'],
+        );
+      }
+
+    } on HttpException catch (error) {
+      var erroMessage = 'Authentication failed';
+
+      if (error.toString().contains('EMAIL_EXITS')) {
+        erroMessage = 'This is email adress already exists';
+      } else if (error.toString().contains('INVALID_EMAIL')) {
+        erroMessage = 'This is a invalid email';
+      } else if (error.toString().contains('WEAK_PASSWORD')) {
+        erroMessage = 'This is a weak password';
+      } else if (error.toString().contains('EMAIL_NOT_FOUND  ')) {
+        erroMessage = 'Email not found';
+      } else if (error.toString().contains('INVALID_PASSWORD')) {
+        erroMessage = 'Invalid passoword';
+      }
+      print(' opa1 $erroMessage');
+      _showErrorDialog(erroMessage);
+    } catch (e) {
+      print('opa $e');
+      const erroMessage = 'Could not authenticate you. Please try again';
+      _showErrorDialog(erroMessage);
     }
+
     setState(() {
       _isLoading = false;
     });

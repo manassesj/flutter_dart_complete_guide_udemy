@@ -24,12 +24,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Shop App',
-        theme: buildThemeData(),
-        initialRoute: AuthScreen.routeName,
-        routes: routes(),
+      child: Consumer<Auth>(
+        builder: (context, auth, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Shop App',
+          theme: buildThemeData(),
+          home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+          routes: routes(),
+        ),
       ),
     );
   }
