@@ -10,6 +10,7 @@ import './screen/product_overview_screen.dart';
 import './screen/product_detail.dart';
 import './screen/user_produts_screen.dart';
 
+import './providers/auth.dart';
 import './providers/orders.dart';
 import './providers/cart.dart';
 import './providers/products_provider.dart';
@@ -43,6 +44,9 @@ class MyApp extends StatelessWidget {
       ),
       ChangeNotifierProvider(
         create: (_) => Orders(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => Auth(),
       ),
     ];
   }
