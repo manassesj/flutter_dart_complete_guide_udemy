@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
         update: (_, auth, previusOrders) => Orders(
           auth.token,
           previusOrders == null ? [] : previusOrders.getOrders,
+          auth.userId
         ),
       ),
       ChangeNotifierProvider(
