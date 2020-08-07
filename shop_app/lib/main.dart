@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
 
+import './screen/splash_screen.dart';
 import './screen/edit_product_screen.dart';
 import './screen/auth_screen.dart';
 import './screen/order_screen.dart';
@@ -29,7 +30,15 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Shop App',
           theme: buildThemeData(),
-          home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+          home: auth.isAuth
+              ? ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (contex, snapShot) =>
+                      snapShot.connectionState == ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen(),
+                ),
           routes: routes(),
         ),
       ),
@@ -49,11 +58,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
       ChangeNotifierProxyProvider<Auth, Orders>(
-        update: (_, auth, previusOrders) => Orders(
-          auth.token,
-          previusOrders == null ? [] : previusOrders.getOrders,
-          auth.userId
-        ),
+        update: (_, auth, previusOrders) => Orders(auth.token,
+            previusOrders == null ? [] : previusOrders.getOrders, auth.userId),
       ),
       ChangeNotifierProvider(
         create: (_) => Cart(),
