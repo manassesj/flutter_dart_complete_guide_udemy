@@ -98,4 +98,14 @@ class Auth with ChangeNotifier {
       print(e);
     }
   }
+
+
+  void logout(){
+    _token = null;
+    _userId = null;
+    _expiryDate = null;
+
+    notifyListeners();
+  }
+
 }

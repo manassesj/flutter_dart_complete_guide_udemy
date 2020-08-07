@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screen/order_screen.dart';
 import 'package:shop_app/screen/product_overview_screen.dart';
 import 'package:shop_app/screen/user_produts_screen.dart';
@@ -18,21 +20,34 @@ class AddDrawer extends StatelessWidget {
             context: context,
             icon: Icons.shop,
             title: 'Shop',
-            route: ProductsOverviewScreen.routeName,
+            onTap: () => Navigator.of(context)
+                .pushReplacementNamed(ProductsOverviewScreen.routeName),
           ),
           Divider(),
           buildListTile(
             context: context,
             icon: Icons.payment,
             title: 'Orders',
-            route: OrderScrren.routeName,
+            onTap: () => Navigator.of(context)
+                .pushReplacementNamed(OrderScrren.routeName),
           ),
           Divider(),
           buildListTile(
             context: context,
             icon: Icons.add,
             title: 'Manage Products',
-            route: UserProductScreen.routeName,
+            onTap: () => Navigator.of(context)
+                .pushReplacementNamed(UserProductScreen.routeName),
+          ),
+          Divider(),
+          buildListTile(
+            context: context,
+            icon: Icons.exit_to_app,
+            title: 'Logout',
+            onTap: () {
+              Navigator.of(context).pop();
+              Provider.of<Auth>(context, listen: false).logout();
+            },
           ),
           Divider(),
         ],
@@ -41,11 +56,11 @@ class AddDrawer extends StatelessWidget {
   }
 
   ListTile buildListTile(
-      {BuildContext context, IconData icon, String title, String route}) {
+      {BuildContext context, IconData icon, String title, Function onTap}) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
-      onTap: () => Navigator.of(context).pushReplacementNamed(route),
+      onTap: onTap,
     );
   }
 }
