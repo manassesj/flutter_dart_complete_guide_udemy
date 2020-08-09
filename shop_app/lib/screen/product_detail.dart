@@ -34,9 +34,12 @@ class ProductDetailScreen extends StatelessWidget {
               child: Card(
                 margin: const EdgeInsets.symmetric(
                     horizontal: 15.0, vertical: 10.0),
-                child: Image.network(
-                  product.imageUrl,
-                  fit: BoxFit.cover,
+                child: Hero(
+                  tag: product.id,
+                  child: Image.network(
+                    product.imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -59,8 +62,11 @@ class ProductDetailScreen extends StatelessWidget {
               ),
             ),
             Card(
-              margin:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0,),
+              margin: const EdgeInsets.only(
+                left: 10.0,
+                right: 10.0,
+                bottom: 10.0,
+              ),
               child: ListTile(
                 leading: Text(
                   'Description:',
