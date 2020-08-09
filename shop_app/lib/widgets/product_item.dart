@@ -30,9 +30,10 @@ class ProductItem extends StatelessWidget {
               'id': product.id,
             },
           ),
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: FadeInImage(
+            placeholder: AssetImage('assets/images/product-placeholder.png'),
+            image: NetworkImage(product.imageUrl),
+            fit: BoxFit.fill,
           ),
         ),
         footer: GridTileBar(
@@ -43,7 +44,8 @@ class ProductItem extends StatelessWidget {
                 product.isFavorite ? Icons.favorite : Icons.favorite_border,
                 color: Theme.of(context).accentColor,
               ),
-              onPressed: () => product.toggleFavoriteStatus(auth.token, auth.userId),
+              onPressed: () =>
+                  product.toggleFavoriteStatus(auth.token, auth.userId),
             ),
           ),
           title: Text(
