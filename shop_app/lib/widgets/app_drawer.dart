@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/cursom_route.dart';
 import 'package:shop_app/providers/auth.dart';
 import 'package:shop_app/screen/order_screen.dart';
 import 'package:shop_app/screen/product_overview_screen.dart';
@@ -33,12 +34,18 @@ class AddDrawer extends StatelessWidget {
           ),
           Divider(),
           buildListTile(
-            context: context,
-            icon: Icons.add,
-            title: 'Manage Products',
-            onTap: () => Navigator.of(context)
-                .pushReplacementNamed(UserProductScreen.routeName),
-          ),
+              context: context,
+              icon: Icons.add,
+              title: 'Manage Products',
+              // onTap: () => Navigator.of(context)
+              //     .pushReplacementNamed(UserProductScreen.routeName),
+              onTap: () {
+                Navigator.of(context).pushReplacement(
+                  CustomRoute(
+                    builder: (context) => OrderScrren(),
+                  ),
+                );
+              }),
           Divider(),
           buildListTile(
             context: context,

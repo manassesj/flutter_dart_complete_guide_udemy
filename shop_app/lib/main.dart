@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/cursom_route.dart';
 
 import './screen/splash_screen.dart';
 import './screen/edit_product_screen.dart';
@@ -84,6 +85,10 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.purple,
       accentColor: Colors.deepOrange,
       fontFamily: 'Lato',
+      pageTransitionsTheme: PageTransitionsTheme(builders: {
+        TargetPlatform.android: customPageTransitionBuilder(),
+
+      })
     );
   }
 }
