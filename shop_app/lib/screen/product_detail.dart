@@ -18,73 +18,79 @@ class ProductDetailScreen extends StatelessWidget {
     ).findById(productId);
 
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          product.title,
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 300,
-              width: double.infinity,
-              child: Card(
-                margin: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                child: Hero(
-                  tag: product.id,
-                  child: Image.network(
-                    product.imageUrl,
-                    fit: BoxFit.cover,
-                  ),
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 300,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Text(
+                product.title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0,
+                  color: Colors.white,
+                ),
+              ),
+              background: Hero(
+                tag: product.id,
+                child: Image.network(
+                  product.imageUrl,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-            Card(
-              margin:
-                  const EdgeInsets.only(left: 10.0, right: 10.0, bottom: 10.0),
-              child: ListTile(
-                leading: Text(
-                  'Price:',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
+          ),
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                Card(
+                  margin: const EdgeInsets.only(
+                      left: 10.0, right: 10.0, bottom: 10.0),
+                  child: ListTile(
+                    leading: Text(
+                      'Price:',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    title: Text(
+                      '\$${product.price}',
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                    ),
                   ),
                 ),
-                title: Text(
-                  '\$${product.price}',
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ),
-              ),
-            ),
-            Card(
-              margin: const EdgeInsets.only(
-                left: 10.0,
-                right: 10.0,
-                bottom: 10.0,
-              ),
-              child: ListTile(
-                leading: Text(
-                  'Description:',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).primaryColor,
+                Card(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                    bottom: 10.0,
+                  ),
+                  child: ListTile(
+                    leading: Text(
+                      'Description:',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    title: Text(
+                      '${product.description}',
+                      style: TextStyle(color: Theme.of(context).accentColor),
+                      softWrap: true,
+                    ),
                   ),
                 ),
-                title: Text(
-                  '${product.description}',
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                  softWrap: true,
-                ),
-              ),
+                SizedBox(
+                  height: 800.0,
+                )
+              ],
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
