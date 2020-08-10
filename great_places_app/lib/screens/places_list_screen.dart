@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/add_place_screen.dart';
+
 class PlaceListScreen extends StatelessWidget {
   static const routeName = '/place-list-screen';
 
@@ -14,7 +16,8 @@ class PlaceListScreen extends StatelessWidget {
               Icons.add,
               color: Colors.white,
             ),
-            onPressed: () {},
+            onPressed: () => Navigator.of(context)
+                .pushReplacementNamed(AddPlaceScreen.routeName),
           ),
         ],
       ),
