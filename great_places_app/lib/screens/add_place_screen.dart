@@ -12,7 +12,7 @@ class AddPlaceScreen extends StatefulWidget {
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  void OnSaved() {
+  void onSaved() {
     final isValid = _formKey.currentState.validate();
 
     if (!isValid) {
