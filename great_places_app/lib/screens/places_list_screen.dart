@@ -18,30 +18,37 @@ class PlaceListScreen extends StatelessWidget {
               Icons.add,
               color: Colors.white,
             ),
-            onPressed: () => Navigator.of(context)
-                .pushNamed(AddPlaceScreen.routeName),
+            onPressed: () =>
+                Navigator.of(context).pushNamed(AddPlaceScreen.routeName),
           ),
         ],
       ),
-      body: Consumer<GreatPlacesProvider>(
-        child: const Center(
-          child: Text('Got no places yest'),
-        ),
-        builder: (_, greatPlaces, child) => greatPlaces.getItems.length <= 0
-            ? child
-            : ListView.builder(
-                itemCount: greatPlaces.getItems.length,
-                itemBuilder: (_, index) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage:
-                        FileImage(greatPlaces.getItems[index].image),
-                  ),
-                  title: Text(greatPlaces.getItems[index].title),
-                  trailing: IconButton(
-                    icon: Icon(Icons.details),
-                    onPressed: () {},
-                  ),
+      body: FutureBuilder(
+        future: Provider.of<GreatPlacesProvider>(context, listen: false).fetchAndSetPlaces(),
+        builder: (_, snapshot) => ConnectionState.waiting ==
+                snapshot.connectionState
+            ? Center(child: CircularProgressIndicator())
+            : Consumer<GreatPlacesProvider>(
+                child: const Center(
+                  child: Text('Got no places yest'),
                 ),
+                builder: (_, greatPlaces, child) =>
+                    greatPlaces.getItems.length <= 0
+                        ? child
+                        : ListView.builder(
+                            itemCount: greatPlaces.getItems.length,
+                            itemBuilder: (_, index) => ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: FileImage(
+                                    greatPlaces.getItems[index].image),
+                              ),
+                              title: Text(greatPlaces.getItems[index].title),
+                              trailing: IconButton(
+                                icon: Icon(Icons.details),
+                                onPressed: () {},
+                              ),
+                            ),
+                          ),
               ),
       ),
     );

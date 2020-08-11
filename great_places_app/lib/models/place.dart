@@ -8,7 +8,7 @@ class PlaceLocationModel {
   final String address;
 
   PlaceLocationModel(
-      {@required this.address, @required this.latitude, this.longitude});
+      {this.address, @required this.latitude, @required this.longitude});
 }
 
 class PlaceModel {
